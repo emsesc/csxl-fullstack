@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from database import Base, engine, get_db
 from schemas import Link
 from models import LinkCreate
+
+# initiate db; engine = phone number
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -16,15 +19,16 @@ def read_root():
 # links : list[Link] = []
 
 @app.post("/api/link")
-def create_link(display_name:str, url:str):
-    link = Link()
-    link.display_name = display_name
-    link.url = url
-    links.append(link)
-    return link
+def create_link(link: LinkCreate, db = Depends(get_db)):
+    db_link = Link(display_name = link.display_name, url = link.url)
+    db.add(db_link)
+    db.commit()
+    db.refresh(db_link)
+    return db_link
+ 
 
 # route that returns list of links created from /api/link
-# returns nothing when stateless
+# stateful = remembers what happens
 @app.get("/api/links")
-def get_links():
-    return "test"
+def get_links(db = Depends(get_db)):
+    return db.query(Link).all()
