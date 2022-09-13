@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from './Link';
 import styled from 'styled-components';
+import UserAvatar from '../UserAvatar';
 
 // Helps with alignment
 const Stack = styled.div`
@@ -21,7 +22,17 @@ export default {
 const Template = args => {
     return (
         <Stack>
-            <p>Hello, welcome to Storybook! We are going to replace this with a component later. </p>
+            <Link {...args} />
+            <Link title="Hi" url="lkfjdslfdjsk"/>
+        </Stack>
+    );
+}
+
+// TODO: return story
+const Avatar = args => {
+    return (
+        <Stack>
+            <UserAvatar alt="Curious George" src="https://www.looper.com/img/gallery/this-is-who-narrates-curious-george/l-intro-1622604401.jpg"/>
         </Stack>
     );
 }
@@ -32,3 +43,6 @@ Default.args = {
     link: 'https://www.google.com',
     title: "GO TO GOOGLE"
 }
+
+export const TestAvatar = Avatar.bind({});
+// can't name as UserAvatar because you already imported that
